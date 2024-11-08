@@ -11,7 +11,7 @@ conda env create -f environment.yml
 
 # 
 pip install -e ./diff-gaussian-rasterization
-pip install -e ./submodules/simple-knn
+# pip install -e ./submodules/simple-knn
 
 # download models and db
 wget https://repo-sam.inria.fr/fungraph/3d-gaussian-splatting/datasets/pretrained/models.zip

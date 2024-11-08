@@ -186,7 +186,7 @@ static inline float3 computeCov2D(const float3 mean, float focal_x, float focal_
             T[i * 3 + j] = 0.0f;
             for (int k = 0; k < 3; k++)
             {
-                T[i * 3 + j] += W[i * 3 + k] * J[k * 3 + j];
+                T[i * 3 + j] += J[i * 3 + k] * W[k * 3 + j];
             }
         }
     }
@@ -222,7 +222,7 @@ static inline float3 computeCov2D(const float3 mean, float focal_x, float focal_
             temp[i * 3 + j] = 0.0f;
             for (int k = 0; k < 3; k++)
             {
-                temp[i * 3 + j] += TT[i * 3 + k] * Vrk_T[k * 3 + j];
+                temp[i * 3 + j] += Vrk_T[i * 3 + k] * TT[k * 3 + j];
             }
         }
     }
@@ -235,7 +235,7 @@ static inline float3 computeCov2D(const float3 mean, float focal_x, float focal_
             cov[i * 3 + j] = 0.0f;
             for (int k = 0; k < 3; k++)
             {
-                cov[i * 3 + j] += temp[i * 3 + k] * T[k * 3 + j];
+                cov[i * 3 + j] += T[i * 3 + k] * temp[k * 3 + j];
             }
         }
     }
@@ -254,15 +254,19 @@ static inline void computeCov3D(const float3 scale, float mod, const float4 rot,
         0.0f, mod * scale.y, 0.0f,
         0.0f, 0.0f, mod * scale.z};
 
-    float qx = rot.x;
-    float qy = rot.y;
-    float qz = rot.z;
-    float qw = rot.w;
+    // float qx = rot.x;
+    // float qy = rot.y;
+    // float qz = rot.z;
+    // float qw = rot.w;
+    float qr = rot.x;
+	float qx = rot.y;
+	float qy = rot.z;
+	float qz = rot.w;
 
     float R[9] = {
-        1.f - 2.f * (qy * qy + qz * qz), 2.f * (qx * qy - qw * qz), 2.f * (qx * qz + qw * qy),
-        2.f * (qx * qy + qw * qz), 1.f - 2.f * (qx * qx + qz * qz), 2.f * (qy * qz - qw * qx),
-        2.f * (qx * qz - qw * qy), 2.f * (qy * qz + qw * qx), 1.f - 2.f * (qx * qx + qy * qy)};
+        1.f - 2.f * (qy * qy + qz * qz), 2.f * (qx * qy - qr * qz), 2.f * (qx * qz + qr * qy),
+        2.f * (qx * qy + qr * qz), 1.f - 2.f * (qx * qx + qz * qz), 2.f * (qy * qz - qr * qx),
+        2.f * (qx * qz - qr * qy), 2.f * (qy * qz + qr * qx), 1.f - 2.f * (qx * qx + qy * qy)};
 
     float M[9];
     for (int i = 0; i < 3; i++)
@@ -272,7 +276,7 @@ static inline void computeCov3D(const float3 scale, float mod, const float4 rot,
             M[i * 3 + j] = 0.0f;
             for (int k = 0; k < 3; k++)
             {
-                M[i * 3 + j] += S[i * 3 + k] * R[k * 3 + j];
+                M[i * 3 + j] += R[i * 3 + k] * S[k * 3 + j];
             }
         }
     }
@@ -294,7 +298,7 @@ static inline void computeCov3D(const float3 scale, float mod, const float4 rot,
             Sigma[i * 3 + j] = 0.0f;
             for (int k = 0; k < 3; k++)
             {
-                Sigma[i * 3 + j] += MT[i * 3 + k] * M[k * 3 + j];
+                Sigma[i * 3 + j] += M[i * 3 + k] * MT[k * 3 + j];
             }
         }
     }
